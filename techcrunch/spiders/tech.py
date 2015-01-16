@@ -32,5 +32,18 @@ class FundsupermartSpider(CrawlSpider):
             data['fields']['link'] = a['href']
             data['fields']['text'] = a.text
             data['fields']['timestamp'] = timestamp[elem].text
+            #yield Request(a['href'], callback=self.parseSub)
             final.append(data)
+            data = {}
         print json.dumps(final, indent=2)
+
+    """def parseSub(self, response):
+
+        soup = BeautifulSoup(response.body)
+        article = soup.find('div', {'class':"article-entry text"})
+        invalid_tags = ['b', 'i', 'u', 'div', 'figure', 'a', 'html', 'body', 'p', 'h    1', 'h2', 'span', 'img', 'strong', 'li', 'ul', 'figcaption', 'br', 'script', 'small']
+        for tag in invalid_tags:
+            for match in article.findAll(tag):
+                match.replaceWith('')
+
+        print article.tex"""
