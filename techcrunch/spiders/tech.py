@@ -16,6 +16,7 @@ class FundsupermartSpider(CrawlSpider):
     link_crawl = 'http://techcrunch.com/popular/'
     start_urls = ['http://techcrunch.com/popular/']
     content = []
+    pk = 1
     rules = [Rule(SgmlLinkExtractor(allow=(link_crawl)), callback='parse_item', follow=True)]
     def parse_item(self, response):
 
@@ -38,6 +39,9 @@ class FundsupermartSpider(CrawlSpider):
             final.append(data)
             data = {}
         print json.dumps(final, indent=2)
+        #t = open('content.json', 'a')
+        #t.write('[')
+        #t.close()
 
     def parseSub(self, response):
 
@@ -48,6 +52,13 @@ class FundsupermartSpider(CrawlSpider):
         for tag in invalid_tags:
             for match in article.findAll(tag):
                 match.replaceWithChildren()
-        self.content.append(article.text)
-
-        print json.dumps(self.content, indent=2)
+        d = {}
+        d['pk'] = self.pk
+        d['model'] = 'newscontent'
+        d['fields'] = {}
+        d['fields']['content'] = article.text
+        self.pk += 1
+        t = open('content.json', 'a')
+        t.write(json.dumps(d, indent=2))
+        t.write(',')
+        t.close()
